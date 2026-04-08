@@ -10,11 +10,6 @@ spec:
         name: huggingface-dotjson
       args:
         - --model_name=qwen
-        - --gpu_memory_utilization=0.9
-        - --structured-outputs-config.backend=dotjson
-        - --structured-outputs-config.disable-fallback=true
-        - --structured-outputs-config.disable-any-whitespace=false
-        - --structured-outputs-config.disable-additional-properties=false
       runtime: kserve-huggingfaceserver-dotjson
       storageUri: "hf://Qwen/Qwen3-0.6B"
       resources:
