@@ -1,0 +1,49 @@
+apiVersion: serving.kserve.io/v1alpha1
+kind: ClusterServingRuntime
+metadata:
+  annotations:
+    serving.kserve.io/server-type: huggingfaceserver-dotjson
+  name: kserve-huggingfaceserver-dotjson
+spec:
+  annotations:
+    prometheus.kserve.io/path: /metrics
+    prometheus.kserve.io/port: "8080"
+  containers:
+    - args:
+        - --model_name={{.Name}}
+        - --structured-outputs-config={"backend":"dotjson"}
+      env:
+        - name: LMCACHE_USE_EXPERIMENTAL
+          value: "True"
+      image: huggingfaceserver:vllm-dev
+      name: kserve-container
+      resources:
+        limits:
+          cpu: "1"
+          memory: 2Gi
+        requests:
+          cpu: "1"
+          memory: 2Gi
+      securityContext:
+        allowPrivilegeEscalation: false
+        capabilities:
+          drop:
+            - ALL
+        privileged: false
+        runAsNonRoot: true
+      volumeMounts:
+        - mountPath: /dev/shm
+          name: devshm
+  hostIPC: false
+  protocolVersions:
+    - v2
+    - v1
+  supportedModelFormats:
+    - autoSelect: false
+      name: huggingface-dotjson
+      priority: 1
+      version: "1"
+  volumes:
+    - emptyDir:
+        medium: Memory
+      name: devshm
