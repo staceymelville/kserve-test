@@ -26,6 +26,7 @@ To get things to run with vllm v0.18.0 and dotjson the file kserve/python/vllm_m
   ```
 * Build docker image (note the tag matches that in the serving runtime resource definition) 
   ```
+  eval $(minikube docker-env)
   docker build -t huggingfaceserver:vllm-dev . -f huggingface_server.Dockerfile --secret id=catoken,env=CODEARTIFACT_AUTH_TOKEN
   ```
 
