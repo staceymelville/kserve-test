@@ -12,3 +12,19 @@ Make sure to have the container toolkit and all other docker system dependencies
 * kubectl create namespace kserve-test
 * kubectl apply -f kserve-huggingfaceserver-dotjson.yaml 
 * kubectl apply -n kserve-test -f inference_service_dotjson.yaml
+
+
+## Modifications
+
+To get things to run with vllm v0.18.0 and dotjson the file kserve/python/vllm_model.py was modified. It is necessary to build a new huggingface-server docker image with these changes.
+
+* clone kserve
+* copy over updated vllm_model.py
+* Set codeartifact token
+  ```
+  export CODEARTIFACT_AUTH_TOKEN=`aws codeartifact get-authorization-token --domain dottxt-ai --domain-owner 242201295967 --query authorizationToken --output text --region us-east-1`
+  ```
+* Build docker image (note the tag matches that in the serving runtime resource definition) 
+  ```
+  docker build -t huggingfaceserver:vllm-dev . -f huggingface_server.Dockerfile --secret id=catoken,env=CODEARTIFACT_AUTH_TOKEN
+  ```
